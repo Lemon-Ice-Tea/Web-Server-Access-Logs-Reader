@@ -12,26 +12,24 @@ def read_file(file_name):
 
     for i in range(len(lines)):
         try:
-            print(i, lines[i])
+            #print(i, lines[i])
             lines[i] = lines[i].split(" - - ")  #get the host name
             data = lines[i][1].split()
             new_data = [lines[i][0]]        #split the time, object, response_code, transfer_size
             for j in data:
                 new_data.append(j)
             all_data.append(new_data)
-        except IndexError:
+        except IndexError:                  #some requests were malformed, save it as error
             error_data.append(lines[i][0])
             continue
 
-    return all_data, error_data
+    return all_data, error_data  #return two lists, one is error
 
 
 def get_total_bytes(data_list):
-    count = 0
     total = 0
-    for data in data_list:
-        count += 1
-
+    for data in data_list:              #read one line of log file
+        # get the last item then convert to integer, if it is "-" then it's not convertable
         try:
             int_transfer = int(data[-1])
 
@@ -42,7 +40,7 @@ def get_total_bytes(data_list):
     return total
 
 
-def get_list_response_code(data_list):
+def get_list_response_code(data_list):      #get the response code, store in a dictionary
     response_code = {}
     for data in data_list:
         try:
