@@ -1,12 +1,14 @@
+import codecs
 
 
 def read_file(file_name):
-    file = open(file_name, "r")
-    lines = file.readlines()
-    file.close()
-    lines = [line.strip() for line in lines]
+    lines = []
     all_data = []
     error_data = []
+
+    with codecs.open(file_name, 'rb', 'utf-8', errors='replace') as f:
+        for line in f:
+            lines.append(line.strip())
 
     for i in range(len(lines)):
         try:
@@ -56,7 +58,6 @@ def get_list_response_code(data_list):
             else:
                 response_code[response] += 1
 
-
         except ValueError:
             continue
     return response_code
@@ -88,28 +89,8 @@ def total_data_transfer_by_host(data_list):
     return host_dict
 
 
-def add_data(data_list, error_list):
-    global available
-    global error
-    for i in data_list:
-        available.append(i)
-    for j in error_list:
-        error.append(j)
-
-
 if __name__ == "__main__":
-    #available = []
-    #error = []
-    count = 0
-    """
-        for i in range(8):
-
-        file_name = f"log{i}.txt"
-        data_list, error_list = read_file(file_name)
-        print(i)
-        add_data(data_list, error_list)
-    """
-    available = read_file("test_data")[0]
+    available = read_file("access_log.txt")[0]
 
     print("total bytes: ", get_total_bytes(available) / 1000000)
     print("average bytes: ", get_total_bytes(available) / 352 / 1000000)
